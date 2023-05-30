@@ -1,9 +1,14 @@
-# INSERTING A NEW NODE IN BETWEEN TWO NODES
+# DELETING A NODE BETWEEN TWO NODES
 # singly linkedlist
 #create nodes
 #create linkedlist 
 #add nodes to linkedlist
 #print list
+#------------------PROCESS--------------
+#Traverse till the node which you want to delete
+#Preserve the details of the previous node
+#Establish a connection from the next of the previous node to the next of this node
+#make the next of this node point to none
 
 class Node:
     #to create node
@@ -17,6 +22,12 @@ class LinkedList:
     #to create a linked list
     def __init__(self):
         self.head = None
+
+    def isListEmpty(self):
+        if self.head is None:
+            return True
+        else:
+            return False
 
     def listLength(self):
         #traverse the LL from fist to last and each iteration increase the count
@@ -33,20 +44,28 @@ class LinkedList:
         self.head = newNode 
         self.head.next = temporaryNode
         del temporaryNode #now that we don't need temporary node we are deleting it.    
+    
+    def deleteHead(self):
+        if self.isListEmpty() is False:
+            previousHead = self.head
+            self.head = self.head.next
+            previousHead.next = None
+        else:
+            print("Linked list is empty. Delete failed")
 
     
     def insertAt(self,newNode,Position):
         #logic
         #traverse the list till position 1 ; Store the details of previous node ;  Make a connection from the next of previous node to new node ; Make a connection from next of new node to node at position 1
         #The new node now becomes your node at position 1 and the node that was earlier at position 1 now becomes the node at position 2
-        #head=>10->20->30->None || newNode => 15-> Node || position =>1
+        #head=>John->Ben->Matthew->None || newNode => 15-> Node || position =>1
         if Position <0 or Position > self.listLength():
             print("invalid position")
             return
         if Position == 0:
             self.insertHead(newNode)
             return
-        currentNode = self.head #starts from the head node 10,20..
+        currentNode = self.head #starts from the head node John,Ben..
         currentPosition = 0 #keeps track of current node initial position 
         while True:
             if currentPosition == Position:
@@ -63,7 +82,7 @@ class LinkedList:
         if self.head is None:
             self.head = newNode
         else:
-            # head => 10->20->Node || 10 -> 30
+            # head => John->Ben->Node || John  -> Matthew
             # Always next of our last node points to none so we need to break the connection bw next opf our last node and make th enext of our last node to new node
             lastNode = self.head #lets have a node called lastnode which starts from the first node
             #traverse the list from the start till the end to identify the last node
@@ -76,8 +95,38 @@ class LinkedList:
             #once while loop breaks we are at the last node break the connection from last node.next as none to last node .next as new node    
             lastNode.next =newNode
     
+    def deleteAt(self,Position):
+        if Position <0 or Position >= self.listLength():
+            print("Invalid Position")
+            return
+
+        if self.isListEmpty() is False:
+            if Position is 0:
+                self.deleteHead()
+                return
+            currentNode =self.head
+            currentPosition = 0
+
+            while True:
+                if currentPosition == Position:
+                    previousNode.next = currentNode.next #next of john pointing to the next of ben
+                    currentNode.next = None
+                    break
+                previousNode = currentNode
+                currentNode = currentNode.next
+                currentPosition +=1
+        
+    
+    def deleteEnd(self):
+        #head => John->Ben->Matthew
+        lastNode =self.head
+        while lastNode.next is not None:
+            previousNode =lastNode
+            lastNode = lastNode.next
+        #del lastNode # deleted the reference to that last but deleted the node need to change the reference address to none
+        previousNode.next = None #dereference that address of the previous node to break the connection
     def printList(self):
-        #head =>10->20->30->None
+        #head =>John->Ben->Matthew->None
         if self.head is None:
             print("List is empty")
             return
@@ -93,16 +142,18 @@ class LinkedList:
 # Node => data(data which we feel to store), next(the pointer which points to the next node)
 #object for our next class
 #firstNode.data => John, FirstNode.next => None
-firstNode = Node(10)
+firstNode = Node("John")
 #add this node to the linkedlist
 #create an object of the class linkedlist(which is initially empty) (make sure the head of the linkedlist is none)
 linkedList = LinkedList()
 linkedList.insertEnd(firstNode)
 
-secondNode = Node(20)
+secondNode = Node("Ben")
 linkedList.insertEnd(secondNode)
-thirdNode = Node(30)
+thirdNode = Node("Matthew")
 linkedList.insertEnd(thirdNode)
-fourthNode = Node(15)
-linkedList.insertAt(fourthNode,1) #Node and position to be inserted at
+#fourthNode = Node(15)
+#linkedList.insertAt(fourthNode,1) #Node and position to be inserted at
+#linkedList.deleteEnd()
+#linkedList.deleteAt(1) #position
 linkedList.printList()
